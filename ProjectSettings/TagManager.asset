@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Bad
   - Good
+  - Swipe
+  - Boom
   layers:
   - Default
   - TransparentFX

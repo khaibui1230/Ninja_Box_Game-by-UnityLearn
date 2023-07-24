@@ -28,6 +28,7 @@ public class Target : MonoBehaviour
 
         //ap mot luc huong len tren theo truc y, voi y nghia la mot luc ngan
         targetRb.AddForce(RandomForce(), ForceMode.Impulse);
+
         // lam xoay vat the ngau nhien theo gia tri ham random
         targetRb.AddTorque(RandomTorque(), RandomTorque(), RandomTorque(), ForceMode.Impulse);
 
@@ -50,11 +51,7 @@ public class Target : MonoBehaviour
         return Vector3.up * UnityEngine.Random.Range(minSpeed, maxSpeed);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    // neu nguoi choi an vao 
     private void OnMouseDown()
     {
         if (managerGame.isGameActive)
@@ -62,37 +59,58 @@ public class Target : MonoBehaviour
             Destroy(gameObject);
             // khoi tao bien explotionParticle when u click 
             Instantiate(explotionParticle, transform.position, explotionParticle.transform.rotation);
+
             // tranform.rotation co tac dung cho ve the quay theo cung chieu voi vat the ban dau
             managerGame.UpdateScore(point);
+        }
+    }
 
-            if (gameObject.CompareTag("Bad"))
+
+
+
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (managerGame.isGameActive == false)
+        {
+            managerGame.GameOver();
+            Destroy(gameObject);
+        }
+        //Destroy(gameObject);
+        //if (gameObject.CompareTag("Good"))
+        //{
+        //    managerGame.UpdateScorelives();
+        //}
+
+    }
+    public void DestroyTarget()
+    {
+        if (managerGame.isGameActive == true)
+        {
+            if (gameObject.CompareTag("Good"))
             {
-                //pointGameOver++;
-                //if(pointGameOver >= 2)
-                //{
-                //    Debug.Log("hi");
-                //}
+                Destroy(gameObject);
+                Instantiate(explotionParticle, transform.position,
+                explotionParticle.transform.rotation);
+                managerGame.UpdateScore(point);
+            }
+            else if (gameObject.CompareTag("Bad"))
+            {
+                Destroy(gameObject);
+                Instantiate(explotionParticle, transform.position,
+                explotionParticle.transform.rotation);
+                managerGame.UpdateScorelives();
+            }
+            else if (gameObject.CompareTag("Boom"))
+            {
+                Time.timeScale = 0f;
+                managerGame.isGameActive = false;
+                Instantiate(explotionParticle, transform.position,
+                explotionParticle.transform.rotation);
                 managerGame.GameOver();
-
             }
         }
     }
 
-
-
-
-    //private void OnMouseUp()
-    //{
-
-    //}
-    public void OnTriggerEnter(Collider other)
-    {
-        Destroy(gameObject);
-        if (gameObject.CompareTag("Good"))
-        {
-            managerGame.IncreaseConllisonCount();
-        }
-
-    }
 
 }
